@@ -1,8 +1,6 @@
 import random
 import uuid
-# from asyncio.exceptions import
 from asyncio import exceptions
-
 import aiogram
 from aiogram import executor
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -18,18 +16,11 @@ from aiogram.utils.markdown import link
 
 async def db2_test():
     await db.set_bind(config.POSTGRES_URI)
-    # await db.gino.drop_all()
-    # await db.gino.create_all()
-    # await functions.add_admin(str(uuid.uuid4()), str(720207278))
 markup2 = ReplyKeyboardMarkup(resize_keyboard=True)
 
 
-# @dp.errors_handler(exception=aiogram.utils.exceptions.RetryAfter)
-# async def exception_handler(exception: aiogram.utils.exceptions.RetryAfter, id, message, ranges):
-#     await send_contacts(id, message, ranges)
-#     return True
-
 message1 = 1
+
 
 @dp.errors_handler(exception=aiogram.utils.exceptions.RetryAfter)
 async def exception_handler(update: types.Update, exception: aiogram.utils.exceptions.RetryAfter):
@@ -98,7 +89,6 @@ async def load_kind2(call, state: FSMContext):
     await FSM.next()
     await functions.edit_message(call.message, 'Оберіть стать')
     await call.message.edit_reply_markup(sex_menu)
-    # await bot.send_message(call.from_user.id, 'Оберіть стать', reply_markup=sex_menu)
 
 
 @dp.callback_query_handler(lambda call: 'girl' in call.data, state=FSM.sex)
@@ -157,15 +147,6 @@ async def load_breed(message: types.Message, state: FSMContext):
             await functions.add_finded_pet(f"C:\\Users\dixoc\Desktop\hackathon\hackathon2\\{data['photo']}.png",
                                            data["city"], data['kind'], data['sex'], data['breed'],
                                            ''.join(data['contact']))
-            # for admin in await functions.select_all_admins():
-            #     await bot.send_photo(int(admin.id), photo, caption=f'*Місто*: {data["city"]}\n'
-            #                                                               f'*Вид*: {data["kind"]}\n'
-            #                                                               f'*Стать*: {data["sex"]}\n'
-            #                                                               f'*Порода*: {data["breed"]}\n'
-            #                                                               f'*Контактний номер*: {data["contact"][0]}\n'
-            #                                                               f'*Контактне ім\'я*: {data["contact"][1]}',
-            #                      parse_mode='Markdown')
-        # await message.reply()
         os.remove(f"C:\\Users\dixoc\Desktop\hackathon\hackathon2\\{data['photo']}.png")
     await state.finish()
 
@@ -188,9 +169,7 @@ async def start(message: types.Message):
     id = message.from_user.id
     global message1
     message1 = message
-    # await message.answer('Тимчасово не працює..')
     ranges = functions.dist(message.location.latitude, message.location.longitude)
-    # await message.answer('123')
     await bot.send_contact(id, '+38 (050) 632-34-22', 'Ветеринарна клініка доктора Маковської')
     await message.answer(f'До притулку *{int(ranges[0] * 1000)}* м', parse_mode='Markdown')
     link1 = link('притулку',
@@ -205,12 +184,8 @@ async def start(message: types.Message):
                  'https://www.google.com/maps/dir/48.3908544,35.004025/48.53325,35.0281/@48.46231,34.9702349,12z/data=!3m1!4b1!4m4!4m3!1m1!4e1!1m0')
     await bot.send_contact(id, '068 828 2255', 'Притулок для тварин')
     await message.answer(f'До {link1} *{int(ranges[3] * 1000)}* м', parse_mode='Markdown')
-    # try:
-    #     await send_contacts(id, message, ranges)
-    # except Exception as ex:
-    #     await exception_handler(exception=ex, id=id, message=message, ranges=ranges)
 
-
+    
 @dp.message_handler(content_types=['contact'])
 async def remove(message: types.Message):
     await message.answer(f'Дякуємо за звернення!🤗 Найближчим часом з Вами зв\'яжеться менеджер за даними:\n'
